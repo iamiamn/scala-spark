@@ -1,0 +1,79 @@
+package streams
+
+import org.junit.runner.RunWith
+import org.scalatest.FunSuite
+import org.scalatest.junit.JUnitRunner
+
+@RunWith(classOf[JUnitRunner])
+class BloxorzSuite extends FunSuite {
+//通过结合main中多个类编写测试问题
+  trait SolutionChecker extends GameDef with Solver with StringParserTerrain {
+    /**
+     * This method applies a list of moves `ls` to the block at position
+     * `startPos`. This can be used to verify if a certain list of moves
+     * is a valid solution, i.e. leads to the goal.
+     */
+    def solve(ls: List[Move]): Block =
+      ls.foldLeft(startBlock) { case (block, move) =>
+        require(block.isLegal) // ！！！这里声明了(block, move) pair为case，来进行模式匹配block.left操作block返回move完成后的Block，所以使用FoldLeft函数
+        move match {
+          case Left => block.left
+          case Right => block.right
+          case Up => block.up
+          case Down => block.down
+        }
+    }
+  }
+
+  trait Level1 extends SolutionChecker {
+      /* terrain for level 1*/
+
+    val level =
+    """ooo-------
+      |oSoooo----
+      |ooooooooo-
+      |-ooooooooo
+      |-----ooToo
+      |------ooo-""".stripMargin
+
+    val optsolution = List(Right, Right, Down, Right, Right, Right, Down)
+  }
+
+
+	test("terrain function level 1") {
+    new Level1 {
+      assert(terrain(Pos(0,0)), "0,0")//terrain是trait GameDef声明的一个函数 Pos=>Boolean，定义在StringParserTerrain里，返回点是否在区域内
+      //lazy val terrain: Terrain = terrainFunction(vector)
+      assert(terrain(Pos(1,1)), "1,1") // start
+      assert(terrain(Pos(4,7)), "4,7") // goal
+      assert(terrain(Pos(5,8)), "5,8")
+      assert(!terrain(Pos(5,9)), "5,9")
+      assert(terrain(Pos(4,9)), "4,9")
+      assert(!terrain(Pos(6,8)), "6,8")
+      assert(!terrain(Pos(4,11)), "4,11")
+      assert(!terrain(Pos(-1,0)), "-1,0")
+      assert(!terrain(Pos(0,-1)), "0,-1")
+    }
+  }
+
+	test("findChar level 1") {
+    new Level1 {
+      assert(startPos == Pos(1,1))
+    }
+  }
+
+
+	test("optimal solution for level 1") {
+    new Level1 {
+      assert(solve(solution) == Block(goal, goal))//！！！solution定义在Solver.scala中，是lazy val,调用后计算一次便保存，所以在下一个test中查找solution.length不会重复计算
+    }
+  }
+
+
+	test("optimal solution length for level 1") {
+    new Level1 {
+      assert(solution.length == optsolution.length)
+    }
+  }
+
+}
