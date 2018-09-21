@@ -1,2 +1,4 @@
 # scala-spark
-this is my spark code storage, and all the program will be compiled using scala
+These are all content under "src" folder for each homework in Scala Spark Coursera Courses. 
+
+"coursera_scalaÐÄµÃ.docx" is my personal notes when study. some kind of cheat sheet in Chinese.
