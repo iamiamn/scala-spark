@@ -14,4 +14,6 @@ Courses List:
 [Big Data Analysis with Scala and Spark](https://www.coursera.org/learn/scala-spark-big-data/home/welcome)
 
 
-
+# Detail
+  Coursera_scala_pdf: a note with more than 30 pages, where I record all the important knowledge point and 
+  explanation when I took coursera course
